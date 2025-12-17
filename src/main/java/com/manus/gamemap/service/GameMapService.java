@@ -67,12 +67,18 @@ public class GameMapService {
             if (!map.getUser().getId().equals(currentUser.getId())) {
                 throw new RuntimeException("Access denied");
             }
+            
+            // Check if name is being changed to one that already exists for another map
+            if (dto.getName() != null && !dto.getName().equals(map.getName())) {
+                if (gameMapRepository.findByUser(currentUser).stream()
+                        .anyMatch(m -> m.getName().equals(dto.getName()) && !m.getId().equals(map.getId()))) {
+                    throw new RuntimeException("A map with this name already exists.");
+                }
+            }
         } else {
+            // New map creation
             // Check for duplicate name for this user
             if (gameMapRepository.findByUser(currentUser).stream().anyMatch(m -> m.getName().equals(dto.getName()))) {
-                 // If ID is null (new map) but name exists, we could throw error or update existing.
-                 // For simplicity, let's throw error if they try to create a NEW map with same name.
-                 // But if they are saving an existing map (id != null), we allow name change unless it conflicts with ANOTHER map.
                  throw new RuntimeException("A map with this name already exists.");
             }
             
