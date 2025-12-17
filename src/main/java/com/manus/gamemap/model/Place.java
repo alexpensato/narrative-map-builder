@@ -26,6 +26,12 @@ public class Place {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "section_id")
+    private String sectionId;
+
+    public String getSectionId() { return sectionId; }
+    public void setSectionId(String sectionId) { this.sectionId = sectionId; }
+
     @ElementCollection
     @CollectionTable(name = "place_actions", joinColumns = @JoinColumn(name = "place_id"))
     @Column(name = "action_text")
