@@ -1,6 +1,7 @@
 package com.manus.gamemap.config;
 
 import com.manus.gamemap.security.JwtRequestFilter;
+import com.manus.gamemap.security.SessionFilter;
 import com.manus.gamemap.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,9 @@ public class SecurityConfig {
     private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
+    private SessionFilter sessionFilter;
+
+    @Autowired
     private CustomUserDetailsService userDetailsService;
 
     @Autowired
@@ -47,7 +51,8 @@ public class SecurityConfig {
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(sessionFilter, JwtRequestFilter.class);
 
         return http.build();
     }
@@ -72,7 +77,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Session-ID"));
         configuration.setAllowCredentials(true);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
