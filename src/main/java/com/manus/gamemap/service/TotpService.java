@@ -33,7 +33,7 @@ public class TotpService {
         QrData data = new QrData.Builder()
                 .label(username)
                 .secret(secret)
-                .issuer("NarrativeMapBuilder")
+                .issuer("Zade Builder")
                 .algorithm(HashingAlgorithm.SHA1)
                 .digits(6)
                 .period(30)

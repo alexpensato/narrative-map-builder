@@ -93,6 +93,13 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(jwt, userDetails.getUsername(), userDetails.getAuthorities().iterator().next().getAuthority(), sessionId));
     }
 
+    @GetMapping("/2fa/status")
+    public ResponseEntity<?> getTwoFactorStatus(@RequestHeader("Authorization") String token) {
+        String username = jwtUtil.extractUsername(token.substring(7));
+        User user = userRepository.findByUsername(username).orElseThrow();
+        return ResponseEntity.ok(Map.of("enabled", user.isTwoFactorEnabled()));
+    }
+
     @GetMapping("/2fa/setup")
     public ResponseEntity<?> setupTwoFactor(@RequestHeader("Authorization") String token) {
         String username = jwtUtil.extractUsername(token.substring(7));

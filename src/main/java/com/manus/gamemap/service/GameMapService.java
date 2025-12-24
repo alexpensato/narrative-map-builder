@@ -71,10 +71,10 @@ public class GameMapService {
             // Check if name is being changed to something that already exists for this user
             // But allow keeping the same name for the same map
             if (dto.getName() != null && !dto.getName().equals(map.getName())) {
-                if (gameMapRepository.findByUser(currentUser).stream()
-                        .anyMatch(m -> m.getName().equals(dto.getName()) && !m.getId().equals(map.getId()))) {
-                    throw new RuntimeException("A map with this name already exists.");
-                }
+                 if (gameMapRepository.findByUser(currentUser).stream()
+                         .anyMatch(m -> m.getName().equals(dto.getName()) && !m.getId().equals(id))) {
+                     throw new RuntimeException("A map with this name already exists.");
+                 }
             }
         } else {
             // Check for duplicate name for this user
